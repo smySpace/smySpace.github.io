@@ -28,7 +28,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://example.com/2024/11/01/svg/iconpark.png">
 <meta property="article:published_time" content="2024-11-01T08:24:29.959Z">
-<meta property="article:modified_time" content="2024-11-01T09:35:50.099Z">
+<meta property="article:modified_time" content="2024-11-04T01:01:25.098Z">
 <meta property="article:author" content="smy">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="http://example.com/2024/11/01/svg/iconpark.png">
@@ -211,7 +211,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          416 words
+          603 words
         
       </span>
     
@@ -222,7 +222,7 @@
         
         
         
-          4 mins
+          6 mins
         
       </span>
     
@@ -272,13 +272,19 @@
 <p>而SVG存储的是XML格式的树状的字符串<br>如下</p>
 <pre><code class="hljs"><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">svg</span> <span class="hljs-attr">version</span>=<span class="hljs-string">&quot;1.1&quot;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">width</span>=<span class="hljs-string">&quot;300&quot;</span> <span class="hljs-attr">height</span>=<span class="hljs-string">&quot;200&quot;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">xmlns</span>=<span class="hljs-string">&quot;http://www.w3.org/2000/svg&quot;</span>&gt;</span><br><br>  <span class="hljs-tag">&lt;<span class="hljs-name">rect</span> <span class="hljs-attr">width</span>=<span class="hljs-string">&quot;100%&quot;</span> <span class="hljs-attr">height</span>=<span class="hljs-string">&quot;100%&quot;</span> <span class="hljs-attr">fill</span>=<span class="hljs-string">&quot;red&quot;</span> /&gt;</span><br><br><span class="hljs-tag">&lt;/<span class="hljs-name">svg</span>&gt;</span><br><br></code></pre></td></tr></table></figure>
 </code></pre>
-<p>这里就是一个 300 *200 svg,内部填满一个红色的矩形</p>
+<p>这里就是一个 300*200 svg,内部填满一个红色的矩形</p>
 <p>我相信想了解SVG格式 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/SVG/Tutorial">W3C文档更专业</a></p>
 <h3 id="我的工作"><a href="#我的工作" class="headerlink" title="我的工作"></a>我的工作</h3><p>对于设计软件，像pixso,PS，sketch,figma,支持导入导入SVG格式是很基础且必要的功能<br>不过市面的设计软件对SVG的兼容性主要是常用的元素和属性,和浏览器渲染的差距不小</p>
 <p>我的工作就是解析SVG渲染为正确的效果<br>用C++渲染SVG听起来不像21世纪做的事对吧,哈哈哈哈	</p>
 <p>如下展示一个图标的结构<br><img src="/2024/11/01/svg/iconpark.png" srcset="/img/loading.gif" lazyload alt="iconPark"></p>
 <p>这一个小图标是由8条矢量路径组成的,点线坐标+属性理论上可以表示任何复杂的图形,只是成本问题</p>
-<p>说一下这块的实现方案</p>
+<p>说一下这块的实现要求:</p>
+<p>1.还原度,要做到图形的还原</p>
+<p>2.性能,看到这你想 ? 一个小图标会有什么性能问题, 哈哈哈, 我们有用户导入240M+的svg,纯字符串的文件<br>  200多M可想而知几百万行,notpad++打开直接都卡死, 第二版引擎我做到了</p>
+<p>3.可维护性!,这块解析其实还挺复杂,存在属性继承,引用等等,第一版引擎已经不好维护了(第一版也是我设计的)</p>
+<p>思路:</p>
+<p>序列化与反序列化:<br>输入xml content str, 需要输出svg element root的一棵树<br>这棵树必须是完全可用的状态,他的图层结构,属性等等一切</p>
+<p>反之亦然,输入svg element root,能生成xml的内容</p>
 <p>未完待续……
     </p>
 
@@ -363,12 +369,6 @@
                 <div class="post-prevnext my-3">
                   <article class="post-prev col-6">
                     
-                    
-                      <a href="/2024/11/01/%E8%81%8A%E4%B8%80%E4%B8%8Bsvg/" title="聊一下SVG[可缩放矢量图形（Scalable Vector Graphics）]格式">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">聊一下SVG[可缩放矢量图形（Scalable Vector Graphics）]格式</span>
-                        <span class="visible-mobile">Previous</span>
-                      </a>
                     
                   </article>
                   <article class="post-next col-6">
